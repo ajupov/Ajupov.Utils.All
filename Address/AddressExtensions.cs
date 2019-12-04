@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.All.Address
+﻿namespace Ajupov.Utils.All.Address
 {
     public static class AddressExtensions
     {

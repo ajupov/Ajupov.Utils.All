@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Infrastructure.All.Generator
+namespace Ajupov.Utils.All.Generator
 {
     public class Generator
     {

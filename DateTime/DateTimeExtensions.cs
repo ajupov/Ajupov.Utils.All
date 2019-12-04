@@ -2,7 +2,7 @@
 using System.Globalization;
 using SystemDateTime = System.DateTime;
 
-namespace Infrastructure.All.DateTime
+namespace Ajupov.Utils.All.DateTime
 {
     public static class DateTimeExtensions
     {

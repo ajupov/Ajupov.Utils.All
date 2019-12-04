@@ -2,7 +2,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Ajupov.Utils.All.Json;
-using Infrastructure.All.Http;
 
 namespace Ajupov.Utils.All.Http
 {

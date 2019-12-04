@@ -7,7 +7,7 @@ using System.Text;
 using System.Web;
 using Ajupov.Utils.All.Json;
 
-namespace Infrastructure.All.Http
+namespace Ajupov.Utils.All.Http
 {
     public static class HttpExtensions
     {

@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.All.Guid
+﻿namespace Ajupov.Utils.All.Guid
 {
     public static class GuidExtensions
     {

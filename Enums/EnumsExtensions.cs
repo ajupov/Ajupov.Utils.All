@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Infrastructure.All.Enums
+namespace Ajupov.Utils.All.Enums
 {
     public static class EnumsExtensions
     {

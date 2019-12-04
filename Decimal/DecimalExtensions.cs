@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.All.Decimal
+﻿namespace Ajupov.Utils.All.Decimal
 {
     public static class DecimalExtensions
     {
