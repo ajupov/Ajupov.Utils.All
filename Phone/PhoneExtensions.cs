@@ -1,21 +1,53 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace Ajupov.Utils.All.Phone
 {
     public static class PhoneExtensions
     {
-        private const int DefaultMaxLength = 10;
-
-        public static string ExtractPhone(this string value, int maxLength = DefaultMaxLength)
+        public static readonly Dictionary<string, PhoneSettings> Settings = new Dictionary<string, PhoneSettings>
         {
-            if (string.IsNullOrWhiteSpace(value))
+            {Country.CountryName.Russia, new PhoneSettings(Country.CountryName.Russia, 10, "7", "8")}
+        };
+
+        public static string GetInternationalPhonePrefix(this string country)
+        {
+            return Settings[country].InternationalPrefix;
+        }
+
+        public static string GetInnerPhonePrefix(this string country)
+        {
+            return Settings[country].InnerPrefix;
+        }
+
+        public static string GetFullInternationalPhonePrefix(this string country)
+        {
+            return $"{PhoneSettings.Plus}{GetInternationalPhonePrefix(country)}";
+        }
+
+        public static string GetPhoneWithoutPrefixes(this string value, string country)
+        {
+            var settings = Settings[country];
+
+            var fullInternationalPrefix = GetFullInternationalPhonePrefix(country);
+            if (value.Length == settings.Length + fullInternationalPrefix.Length &&
+                value.StartsWith(fullInternationalPrefix))
             {
-                return null;
+                return value.Substring(fullInternationalPrefix.Length);
             }
 
-            var result = new string(value.ToCharArray().Where(char.IsDigit).ToArray());
+            var internationalPrefix = GetInternationalPhonePrefix(country);
+            if (value.Length == settings.Length + internationalPrefix.Length && value.StartsWith(internationalPrefix))
+            {
+                return value.Substring(internationalPrefix.Length);
+            }
 
-            return result.Substring(result.Length - maxLength);
+            var innerPrefix = GetInnerPhonePrefix(country);
+            if (value.Length == settings.Length + innerPrefix.Length && value.StartsWith(innerPrefix))
+            {
+                return value.Substring(innerPrefix.Length);
+            }
+
+            return value;
         }
     }
 }
