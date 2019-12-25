@@ -6,7 +6,7 @@ All packages for backend applications.
 
 ### Passwords
 ```
-var passwordHash = Password.ToPasswordHash("SomePassword") // returns hashed password
+var passwordHash = Password.ToPasswordHash("SomePassword")
 
-var isVerifiedPassword = Password.IsVerifiedPassword(SomePassword", passwordHash)   // returns password is correct
+var isVerifiedPassword = Password.IsVerifiedPassword(SomePassword", passwordHash)
 ```
