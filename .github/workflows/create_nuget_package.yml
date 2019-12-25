@@ -1,0 +1,31 @@
+name: Create Nuget package
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+
+      - name: Setup Net Core version
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.100'
+
+      - name: Generate package
+        run: dotnet pack --configuration Release
+
+      - name: Install nuget
+        run: sudo apt install nuget
+    
+      - name: Push package
+        run: |
+          for package in ./bin/Release/*.nupkg
+            do
+              curl -vX PUT -u "${{ secrets.NUGET_USERNAME }}:${{ secrets.NUGET_PASSWORD }}" -F package=@$package ${{ secrets.NUGET_SOURCE }}
+            done
