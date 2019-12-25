@@ -2,8 +2,11 @@
 
 All packages for backend applications.
 
-##### Pack
-```dotnet pack --configuration Release```
+## Usage
 
-##### Push
-```nuget push ".\bin\Release\Ajupov.Utils.All.{version}.nupkg" -Source "GitHub"```
+### Passwords
+```
+var passwordHash = Password.ToPasswordHash("SomePassword") // returns hashed password
+
+var isVerifiedPassword = Password.IsVerifiedPassword(SomePassword", passwordHash)   // returns password is correct
+```
