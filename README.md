@@ -8,5 +8,5 @@ All packages for backend applications.
 ```
 var passwordHash = Password.ToPasswordHash("SomePassword")
 
-var isVerifiedPassword = Password.IsVerifiedPassword(SomePassword", passwordHash)
+var isVerifiedPassword = Password.IsVerifiedPassword("SomePassword", passwordHash)
 ```
