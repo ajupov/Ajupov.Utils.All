@@ -19,9 +19,6 @@ jobs:
 
       - name: Generate package
         run: dotnet pack --configuration Release
-
-      - name: Install nuget
-        run: sudo apt install nuget
     
       - name: Push package
         run: |
