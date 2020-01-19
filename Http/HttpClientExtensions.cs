@@ -17,10 +17,8 @@ namespace Ajupov.Utils.All.Http
 
             using var client = factory.CreateClient();
             var result = await client.GetAsync(fullUri, ct);
-            if (!result.IsSuccessStatusCode)
-            {
-                await GenerateExceptionAsync(fullUri, result);
-            }
+
+            result.EnsureSuccessStatusCode();
         }
 
         public static async Task<TResponse> GetAsync<TResponse>(
@@ -33,10 +31,8 @@ namespace Ajupov.Utils.All.Http
 
             using var client = factory.CreateClient();
             var result = await client.GetAsync(fullUri, ct);
-            if (!result.IsSuccessStatusCode)
-            {
-                await GenerateExceptionAsync(fullUri, result);
-            }
+
+            result.EnsureSuccessStatusCode();
 
             var content = await result.Content.ReadAsStringAsync();
 
@@ -53,10 +49,8 @@ namespace Ajupov.Utils.All.Http
 
             using var client = factory.CreateClient();
             var result = await client.PostAsync(fullUri, body.ToJsonStringContent(), ct);
-            if (!result.IsSuccessStatusCode)
-            {
-                await GenerateExceptionAsync(fullUri, result);
-            }
+
+            result.EnsureSuccessStatusCode();
         }
 
         public static async Task<TResponse> PostAsync<TResponse>(
@@ -69,10 +63,8 @@ namespace Ajupov.Utils.All.Http
 
             using var client = factory.CreateClient();
             var result = await client.PostAsync(fullUri, body.ToJsonStringContent(), ct);
-            if (!result.IsSuccessStatusCode)
-            {
-                await GenerateExceptionAsync(fullUri, result);
-            }
+
+            result.EnsureSuccessStatusCode();
 
             var content = await result.Content.ReadAsStringAsync();
 
@@ -82,14 +74,6 @@ namespace Ajupov.Utils.All.Http
         private static string GetFullUri(string uri, object parameters = null)
         {
             return $"{uri}{parameters.ToQueryParams()}";
-        }
-
-        private static async Task GenerateExceptionAsync(string uri, HttpResponseMessage message)
-        {
-            var content = await message.Content.ReadAsStringAsync();
-
-            throw new HttpRequestException($"Request to {uri} failed. Status code: {message.StatusCode}, " +
-                                           $"Reason: {message.ReasonPhrase}. Details: {content}.");
         }
     }
 }
