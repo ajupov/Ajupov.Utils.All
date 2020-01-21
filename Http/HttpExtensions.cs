@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Web;
 using Ajupov.Utils.All.Json;
+using Ajupov.Utils.All.String;
 
 namespace Ajupov.Utils.All.Http
 {
@@ -21,8 +23,8 @@ namespace Ajupov.Utils.All.Http
                 if (property == null)
                 {
                     continue;
-                }   
-                
+                }
+
                 var value = property.GetValue(parameters);
                 if (value is IEnumerable enumerable && !(value is string))
                 {
@@ -53,9 +55,27 @@ namespace Ajupov.Utils.All.Http
             return uriBuilder.ToString();
         }
 
+        public static void AddAccessToken(this HttpClient client, string value)
+        {
+            if (!value.IsEmpty())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", value);
+            }
+        }
+
         public static StringContent ToJsonStringContent(this object model)
         {
             return new StringContent(model.ToJsonString(), Encoding.UTF8, "application/json");
+        }
+
+        public static FormUrlEncodedContent ToFormDataContent(this object model)
+        {
+            return new FormUrlEncodedContent(
+                model
+                    ?.GetType()
+                    .GetProperties()
+                    .ToList()
+                    .Select(x => new KeyValuePair<string, string>(x.Name, x.GetValue(model)?.ToString())));
         }
     }
 }
