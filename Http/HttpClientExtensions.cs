@@ -1,9 +1,7 @@
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Ajupov.Utils.All.Json;
-using Ajupov.Utils.All.String;
 
 namespace Ajupov.Utils.All.Http
 {
@@ -25,7 +23,6 @@ namespace Ajupov.Utils.All.Http
 
             result.EnsureSuccessStatusCode();
         }
-
 
         public static async Task<TResponse> GetAsync<TResponse>(
             this IHttpClientFactory factory,
@@ -84,6 +81,99 @@ namespace Ajupov.Utils.All.Http
             var content = await result.Content.ReadAsStringAsync();
 
             return content.FromJsonString<TResponse>();
+        }
+        
+        public static async Task PutJsonAsync(
+            this IHttpClientFactory factory,
+            string uri,
+            object body = default,
+            string accessToken = default,
+            CancellationToken ct = default)
+        {
+            var fullUri = GetFullUri(uri);
+
+            using var client = factory.CreateClient();
+            client.AddAccessToken(accessToken);
+
+            var result = await client.PutAsync(fullUri, body.ToJsonStringContent(), ct);
+
+            result.EnsureSuccessStatusCode();
+        }
+
+        public static async Task<TResponse> PutJsonAsync<TResponse>(
+            this IHttpClientFactory factory,
+            string uri,
+            object body = default,
+            string accessToken = default,
+            CancellationToken ct = default)
+        {
+            var fullUri = GetFullUri(uri);
+
+            using var client = factory.CreateClient();
+            client.AddAccessToken(accessToken);
+
+            var result = await client.PutAsync(fullUri, body.ToJsonStringContent(), ct);
+
+            result.EnsureSuccessStatusCode();
+
+            var content = await result.Content.ReadAsStringAsync();
+
+            return content.FromJsonString<TResponse>();
+        }
+        
+        public static async Task PatchJsonAsync(
+            this IHttpClientFactory factory,
+            string uri,
+            object body = default,
+            string accessToken = default,
+            CancellationToken ct = default)
+        {
+            var fullUri = GetFullUri(uri);
+
+            using var client = factory.CreateClient();
+            client.AddAccessToken(accessToken);
+
+            var result = await client.PatchAsync(fullUri, body.ToJsonStringContent(), ct);
+
+            result.EnsureSuccessStatusCode();
+        }
+
+        public static async Task<TResponse> PatchJsonAsync<TResponse>(
+            this IHttpClientFactory factory,
+            string uri,
+            object body = default,
+            string accessToken = default,
+            CancellationToken ct = default)
+        {
+            var fullUri = GetFullUri(uri);
+
+            using var client = factory.CreateClient();
+            client.AddAccessToken(accessToken);
+
+            var result = await client.PatchAsync(fullUri, body.ToJsonStringContent(), ct);
+
+            result.EnsureSuccessStatusCode();
+
+            var content = await result.Content.ReadAsStringAsync();
+
+            return content.FromJsonString<TResponse>();
+        }
+           
+        public static async Task DeleteJsonAsync(
+            this IHttpClientFactory factory,
+            string uri,
+            object body = default,
+            string accessToken = default,
+            CancellationToken ct = default)
+        {
+            var fullUri = GetFullUri(uri);
+
+            using var client = factory.CreateClient();
+            client.AddAccessToken(accessToken);
+
+            var result = await client.DeleteAsync(fullUri, ct);
+
+            result.EnsureSuccessStatusCode();
         }
 
         public static async Task PostFormDataAsync(
