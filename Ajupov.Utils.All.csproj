@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <PackageVersion>1.4.0</PackageVersion>
+        <PackageVersion>1.4.1</PackageVersion>
         <Authors>U. Ajupov</Authors>
         <RepositoryUrl>https://github.com/ajupov/Ajupov.Utils.All.git</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="3.1.3" />
