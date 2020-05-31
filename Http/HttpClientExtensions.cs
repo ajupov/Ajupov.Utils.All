@@ -82,7 +82,7 @@ namespace Ajupov.Utils.All.Http
 
             return content.FromJsonString<TResponse>();
         }
-        
+
         public static async Task PutJsonAsync(
             this IHttpClientFactory factory,
             string uri,
@@ -120,7 +120,7 @@ namespace Ajupov.Utils.All.Http
 
             return content.FromJsonString<TResponse>();
         }
-        
+
         public static async Task PatchJsonAsync(
             this IHttpClientFactory factory,
             string uri,
@@ -158,7 +158,7 @@ namespace Ajupov.Utils.All.Http
 
             return content.FromJsonString<TResponse>();
         }
-           
+
         public static async Task DeleteJsonAsync(
             this IHttpClientFactory factory,
             string uri,

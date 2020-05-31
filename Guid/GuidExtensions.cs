@@ -6,7 +6,7 @@
         {
             return !value.HasValue || IsEmpty(value.Value);
         }
-        
+
         public static bool IsEmpty(this System.Guid value)
         {
             return value == System.Guid.Empty;
