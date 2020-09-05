@@ -1,6 +1,5 @@
 # Ajupov.Utils.All
-
-All packages for backend applications.
+All packages for backend applications
 
 ## Usage
 
