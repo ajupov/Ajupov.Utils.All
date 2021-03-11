@@ -1,23 +1,22 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+﻿using System.Text.Json;
 
 namespace Ajupov.Utils.All.Json
 {
     public static class JsonExtensions
     {
-        private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+        private static readonly JsonSerializerOptions Options = new ()
         {
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
+            PropertyNameCaseInsensitive = true
         };
 
         public static T FromJsonString<T>(this string value)
         {
-            return JsonConvert.DeserializeObject<T>(value, Settings);
+            return JsonSerializer.Deserialize<T>(value, Options);
         }
 
         public static string ToJsonString(this object value)
         {
-            return JsonConvert.SerializeObject(value, Settings);
+            return JsonSerializer.Serialize(value, Options);
         }
     }
 }
