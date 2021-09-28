@@ -1,13 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Web;
 using Ajupov.Utils.All.Json;
-using Ajupov.Utils.All.String;
 
 namespace Ajupov.Utils.All.Http
 {
@@ -51,16 +50,24 @@ namespace Ajupov.Utils.All.Http
                 query[key] = value.ToString();
             }
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.Query = query.ToString() ?? string.Empty;
+
             return uriBuilder.ToString();
         }
 
-        public static void AddAccessToken(this HttpClient client, string value)
+        public static HttpClient AddHeaders(this HttpClient client, Dictionary<string, string> headers)
         {
-            if (!value.IsEmpty())
+            if (headers == null)
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", value);
+                return client;
             }
+
+            foreach (var (key, value) in headers)
+            {
+                client.DefaultRequestHeaders.Add(key, value);
+            }
+
+            return client;
         }
 
         public static StringContent ToJsonStringContent(this object model)
@@ -75,7 +82,8 @@ namespace Ajupov.Utils.All.Http
                     ?.GetType()
                     .GetProperties()
                     .ToList()
-                    .Select(x => new KeyValuePair<string, string>(x.Name, x.GetValue(model)?.ToString())));
+                    .Select(x => new KeyValuePair<string, string>(x.Name, x.GetValue(model)?.ToString()))
+                ?? Array.Empty<KeyValuePair<string, string>>());
         }
     }
 }

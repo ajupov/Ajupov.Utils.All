@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,15 +12,16 @@ namespace Ajupov.Utils.All.Http
             this IHttpClientFactory factory,
             string uri,
             object parameters = default,
-            string accessToken = default,
+            Dictionary<string, string> headers = default,
             CancellationToken ct = default)
         {
             var fullUri = GetFullUri(uri, parameters);
 
             using var client = factory.CreateClient();
-            client.AddAccessToken(accessToken);
 
-            var result = await client.GetAsync(fullUri, ct);
+            var result = await client
+                .AddHeaders(headers)
+                .GetAsync(fullUri, ct);
 
             result.EnsureSuccessStatusCode();
         }
@@ -28,19 +30,20 @@ namespace Ajupov.Utils.All.Http
             this IHttpClientFactory factory,
             string uri,
             object parameters = default,
-            string accessToken = default,
+            Dictionary<string, string> headers = default,
             CancellationToken ct = default)
         {
             var fullUri = GetFullUri(uri, parameters);
 
             using var client = factory.CreateClient();
-            client.AddAccessToken(accessToken);
 
-            var result = await client.GetAsync(fullUri, ct);
+            var result = await client
+                .AddHeaders(headers)
+                .GetAsync(fullUri, ct);
 
             result.EnsureSuccessStatusCode();
 
-            var content = await result.Content.ReadAsStringAsync();
+            var content = await result.Content.ReadAsStringAsync(ct);
 
             return content.FromJsonString<TResponse>();
         }
@@ -49,15 +52,14 @@ namespace Ajupov.Utils.All.Http
             this IHttpClientFactory factory,
             string uri,
             object body = default,
-            string accessToken = default,
+            Dictionary<string, string> headers = default,
             CancellationToken ct = default)
         {
-            var fullUri = GetFullUri(uri);
-
             using var client = factory.CreateClient();
-            client.AddAccessToken(accessToken);
 
-            var result = await client.PostAsync(fullUri, body.ToJsonStringContent(), ct);
+            var result = await client
+                .AddHeaders(headers)
+                .PostAsync(GetFullUri(uri), body.ToJsonStringContent(), ct);
 
             result.EnsureSuccessStatusCode();
         }
@@ -66,19 +68,18 @@ namespace Ajupov.Utils.All.Http
             this IHttpClientFactory factory,
             string uri,
             object body = default,
-            string accessToken = default,
+            Dictionary<string, string> headers = default,
             CancellationToken ct = default)
         {
-            var fullUri = GetFullUri(uri);
-
             using var client = factory.CreateClient();
-            client.AddAccessToken(accessToken);
 
-            var result = await client.PostAsync(fullUri, body.ToJsonStringContent(), ct);
+            var result = await client
+                .AddHeaders(headers)
+                .PostAsync(GetFullUri(uri), body.ToJsonStringContent(), ct);
 
             result.EnsureSuccessStatusCode();
 
-            var content = await result.Content.ReadAsStringAsync();
+            var content = await result.Content.ReadAsStringAsync(ct);
 
             return content.FromJsonString<TResponse>();
         }
@@ -87,15 +88,14 @@ namespace Ajupov.Utils.All.Http
             this IHttpClientFactory factory,
             string uri,
             object body = default,
-            string accessToken = default,
+            Dictionary<string, string> headers = default,
             CancellationToken ct = default)
         {
-            var fullUri = GetFullUri(uri);
-
             using var client = factory.CreateClient();
-            client.AddAccessToken(accessToken);
 
-            var result = await client.PutAsync(fullUri, body.ToJsonStringContent(), ct);
+            var result = await client
+                .AddHeaders(headers)
+                .PutAsync(GetFullUri(uri), body.ToJsonStringContent(), ct);
 
             result.EnsureSuccessStatusCode();
         }
@@ -104,19 +104,18 @@ namespace Ajupov.Utils.All.Http
             this IHttpClientFactory factory,
             string uri,
             object body = default,
-            string accessToken = default,
+            Dictionary<string, string> headers = default,
             CancellationToken ct = default)
         {
-            var fullUri = GetFullUri(uri);
-
             using var client = factory.CreateClient();
-            client.AddAccessToken(accessToken);
 
-            var result = await client.PutAsync(fullUri, body.ToJsonStringContent(), ct);
+            var result = await client
+                .AddHeaders(headers)
+                .PutAsync(GetFullUri(uri), body.ToJsonStringContent(), ct);
 
             result.EnsureSuccessStatusCode();
 
-            var content = await result.Content.ReadAsStringAsync();
+            var content = await result.Content.ReadAsStringAsync(ct);
 
             return content.FromJsonString<TResponse>();
         }
@@ -125,15 +124,14 @@ namespace Ajupov.Utils.All.Http
             this IHttpClientFactory factory,
             string uri,
             object body = default,
-            string accessToken = default,
+            Dictionary<string, string> headers = default,
             CancellationToken ct = default)
         {
-            var fullUri = GetFullUri(uri);
-
             using var client = factory.CreateClient();
-            client.AddAccessToken(accessToken);
 
-            var result = await client.PatchAsync(fullUri, body.ToJsonStringContent(), ct);
+            var result = await client
+                .AddHeaders(headers)
+                .PatchAsync(GetFullUri(uri), body.ToJsonStringContent(), ct);
 
             result.EnsureSuccessStatusCode();
         }
@@ -142,19 +140,18 @@ namespace Ajupov.Utils.All.Http
             this IHttpClientFactory factory,
             string uri,
             object body = default,
-            string accessToken = default,
+            Dictionary<string, string> headers = default,
             CancellationToken ct = default)
         {
-            var fullUri = GetFullUri(uri);
-
             using var client = factory.CreateClient();
-            client.AddAccessToken(accessToken);
 
-            var result = await client.PatchAsync(fullUri, body.ToJsonStringContent(), ct);
+            var result = await client
+                .AddHeaders(headers)
+                .PatchAsync(GetFullUri(uri), body.ToJsonStringContent(), ct);
 
             result.EnsureSuccessStatusCode();
 
-            var content = await result.Content.ReadAsStringAsync();
+            var content = await result.Content.ReadAsStringAsync(ct);
 
             return content.FromJsonString<TResponse>();
         }
@@ -163,15 +160,14 @@ namespace Ajupov.Utils.All.Http
             this IHttpClientFactory factory,
             string uri,
             object body = default,
-            string accessToken = default,
+            Dictionary<string, string> headers = default,
             CancellationToken ct = default)
         {
-            var fullUri = GetFullUri(uri);
-
             using var client = factory.CreateClient();
-            client.AddAccessToken(accessToken);
 
-            var result = await client.DeleteAsync(fullUri, ct);
+            var result = await client
+                .AddHeaders(headers)
+                .DeleteAsync(GetFullUri(uri), ct);
 
             result.EnsureSuccessStatusCode();
         }
@@ -180,15 +176,14 @@ namespace Ajupov.Utils.All.Http
             this IHttpClientFactory factory,
             string uri,
             object body = default,
-            string accessToken = default,
+            Dictionary<string, string> headers = default,
             CancellationToken ct = default)
         {
-            var fullUri = GetFullUri(uri);
-
             using var client = factory.CreateClient();
-            client.AddAccessToken(accessToken);
 
-            var result = await client.PostAsync(fullUri, body.ToFormDataContent(), ct);
+            var result = await client
+                .AddHeaders(headers)
+                .PostAsync(GetFullUri(uri), body.ToFormDataContent(), ct);
 
             result.EnsureSuccessStatusCode();
         }
@@ -197,19 +192,18 @@ namespace Ajupov.Utils.All.Http
             this IHttpClientFactory factory,
             string uri,
             object body = default,
-            string accessToken = default,
+            Dictionary<string, string> headers = default,
             CancellationToken ct = default)
         {
-            var fullUri = GetFullUri(uri);
-
             using var client = factory.CreateClient();
-            client.AddAccessToken(accessToken);
 
-            var result = await client.PostAsync(fullUri, body.ToFormDataContent(), ct);
+            var result = await client
+                .AddHeaders(headers)
+                .PostAsync(GetFullUri(uri), body.ToFormDataContent(), ct);
 
             result.EnsureSuccessStatusCode();
 
-            var content = await result.Content.ReadAsStringAsync();
+            var content = await result.Content.ReadAsStringAsync(ct);
 
             return content.FromJsonString<TResponse>();
         }

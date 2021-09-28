@@ -17,9 +17,8 @@ namespace Ajupov.Utils.All.Password
             var salt = GetSalt();
             var bytes = GetBytes(value, salt);
             var array = GetArray(salt);
-            var result = array;
 
-            CopyArray(bytes, result);
+            CopyArray(bytes, array);
 
             return Convert.ToBase64String(array);
         }
@@ -42,13 +41,9 @@ namespace Ajupov.Utils.All.Password
 
         private static byte[] GetSalt()
         {
-            byte[] salt;
-
-            using (var generator = RandomNumberGenerator.Create())
-            {
-                salt = new byte[SaltLength];
-                generator.GetBytes(salt);
-            }
+            var salt = new byte[SaltLength];
+            using var generator = RandomNumberGenerator.Create();
+            generator.GetBytes(salt);
 
             return salt;
         }

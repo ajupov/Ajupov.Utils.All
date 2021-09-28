@@ -29,7 +29,7 @@ namespace Ajupov.Utils.All.DateTime
         {
             return SystemDateTime.TryParseExact(value, format, CultureInfo.InvariantCulture, DateTimeStyles.None,
                 out var date)
-                ? (SystemDateTime?) date
+                ? date
                 : null;
         }
 
@@ -37,7 +37,7 @@ namespace Ajupov.Utils.All.DateTime
         {
             return SystemDateTime.TryParseExact(value, format, CultureInfo.InvariantCulture, DateTimeStyles.None,
                 out var time)
-                ? (SystemDateTime?) time
+                ? time
                 : null;
         }
 
@@ -45,7 +45,7 @@ namespace Ajupov.Utils.All.DateTime
         {
             return SystemDateTime.TryParseExact(value, format, CultureInfo.InvariantCulture, DateTimeStyles.None,
                 out var dateTime)
-                ? (SystemDateTime?) dateTime
+                ? dateTime
                 : null;
         }
 

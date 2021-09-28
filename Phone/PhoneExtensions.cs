@@ -4,7 +4,7 @@ namespace Ajupov.Utils.All.Phone
 {
     public static class PhoneExtensions
     {
-        public static readonly Dictionary<string, PhoneSettings> Settings = new Dictionary<string, PhoneSettings>
+        public static readonly Dictionary<string, PhoneSettings> Settings = new ()
         {
             {Country.CountryName.Russia, new PhoneSettings(Country.CountryName.Russia, 10, "7", "8")}
         };
