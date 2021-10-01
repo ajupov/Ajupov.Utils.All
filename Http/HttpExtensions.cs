@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Web;
 using Ajupov.Utils.All.Json;
 
@@ -78,11 +79,19 @@ namespace Ajupov.Utils.All.Http
         public static FormUrlEncodedContent ToFormDataContent(this object model)
         {
             return new FormUrlEncodedContent(
-                model
-                    ?.GetType()
+                model?
+                    .GetType()
                     .GetProperties()
-                    .ToList()
-                    .Select(x => new KeyValuePair<string, string>(x.Name, x.GetValue(model)?.ToString()))
+                    .Select(x =>
+                    {
+                        var jsonPropertyValue = x.CustomAttributes
+                            .FirstOrDefault(a => a.AttributeType == typeof(JsonPropertyNameAttribute))?
+                            .ConstructorArguments.FirstOrDefault().Value?.ToString();
+
+                        return new KeyValuePair<string, string>(
+                            !string.IsNullOrEmpty(jsonPropertyValue) ? jsonPropertyValue : x.Name,
+                            x.GetValue(model)?.ToString());
+                    })
                 ?? Array.Empty<KeyValuePair<string, string>>());
         }
     }
