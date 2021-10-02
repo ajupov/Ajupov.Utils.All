@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Text.Json.Serialization;
 using System.Web;
-using Ajupov.Utils.All.Json;
 
 namespace Ajupov.Utils.All.Http
 {
@@ -54,45 +49,6 @@ namespace Ajupov.Utils.All.Http
             uriBuilder.Query = query.ToString() ?? string.Empty;
 
             return uriBuilder.ToString();
-        }
-
-        public static HttpClient AddHeaders(this HttpClient client, Dictionary<string, string> headers)
-        {
-            if (headers == null)
-            {
-                return client;
-            }
-
-            foreach (var (key, value) in headers)
-            {
-                client.DefaultRequestHeaders.Add(key, value);
-            }
-
-            return client;
-        }
-
-        public static StringContent ToJsonStringContent(this object model)
-        {
-            return new StringContent(model.ToJsonString(), Encoding.UTF8, "application/json");
-        }
-
-        public static FormUrlEncodedContent ToFormDataContent(this object model)
-        {
-            return new FormUrlEncodedContent(
-                model?
-                    .GetType()
-                    .GetProperties()
-                    .Select(x =>
-                    {
-                        var jsonPropertyValue = x.CustomAttributes
-                            .FirstOrDefault(a => a.AttributeType == typeof(JsonPropertyNameAttribute))?
-                            .ConstructorArguments.FirstOrDefault().Value?.ToString();
-
-                        return new KeyValuePair<string, string>(
-                            !string.IsNullOrEmpty(jsonPropertyValue) ? jsonPropertyValue : x.Name,
-                            x.GetValue(model)?.ToString());
-                    })
-                ?? Array.Empty<KeyValuePair<string, string>>());
         }
     }
 }
