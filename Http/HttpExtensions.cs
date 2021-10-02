@@ -1,14 +1,21 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace Ajupov.Utils.All.Http
 {
     public static class HttpExtensions
     {
-        public static string ToQueryParams(this object parameters)
+        public static string AddParameters(this string uri, object parameters)
         {
             var properties = TypeDescriptor.GetProperties(parameters);
             var result = new List<string>();
@@ -49,6 +56,50 @@ namespace Ajupov.Utils.All.Http
             uriBuilder.Query = query.ToString() ?? string.Empty;
 
             return uriBuilder.ToString();
+        }
+
+        public static HttpClient AddHeaders(this HttpClient client, Dictionary<string, string> headers)
+        {
+            foreach (var (key, value) in headers ?? new Dictionary<string, string>())
+            {
+                client.DefaultRequestHeaders.Add(key, value);
+            }
+
+            return client;
+        }
+
+        public static HttpContent ToStringContent(this object body)
+        {
+            return new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json; charset=UTF-8");
+        }
+
+        public static HttpContent ToFormUrlEncodedContent(this object body)
+        {
+            return new FormUrlEncodedContent(
+                body?
+                    .GetType()
+                    .GetProperties()
+                    .Select(x =>
+                    {
+                        var jsonPropertyValue = x.CustomAttributes
+                            .FirstOrDefault(a => a.AttributeType == typeof(JsonPropertyNameAttribute))?
+                            .ConstructorArguments.FirstOrDefault().Value?.ToString();
+
+                        return new KeyValuePair<string, string>(
+                            !string.IsNullOrEmpty(jsonPropertyValue) ? jsonPropertyValue : x.Name,
+                            x.GetValue(body)?.ToString());
+                    })
+                ?? Array.Empty<KeyValuePair<string, string>>());
+        }
+
+        public static async Task<TResult> ReadResponseContentAsync<TResult>(
+            this HttpResponseMessage response,
+            CancellationToken ct)
+        {
+            response.EnsureSuccessStatusCode();
+            var content = await response.Content.ReadAsStringAsync(ct);
+
+            return JsonSerializer.Deserialize<TResult>(content);
         }
     }
 }

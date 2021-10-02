@@ -18,18 +18,34 @@ namespace Ajupov.Utils.All.Http.FormDataHttpClient
             _factory = factory;
         }
 
+        public Task GetAsync(
+            string uri,
+            object parameters = default,
+            Dictionary<string, string> headers = default,
+            CancellationToken ct = default)
+        {
+            return GetInternalAsync(uri, parameters, headers, ct);
+        }
+
         public async Task<TResult> GetAsync<TResult>(
             string uri,
             object parameters = default,
             Dictionary<string, string> headers = default,
             CancellationToken ct = default)
         {
-            using var client = _factory.CreateClient();
+            var response = await GetInternalAsync(uri, parameters, headers, ct);
 
-            AddHeaders(client, headers);
-            var response = await client.GetAsync(uri, ct);
+            return await response.ReadResponseContentAsync<TResult>(ct);
+        }
 
-            return await ReadResponseContentAsync<TResult>(response, ct);
+        public Task PostAsync(
+            string uri,
+            object parameters = default,
+            object body = default,
+            Dictionary<string, string> headers = default,
+            CancellationToken ct = default)
+        {
+            return PostInternalAsync(uri, parameters, body, headers, ct);
         }
 
         public async Task<TResult> PostAsync<TResult>(
@@ -39,12 +55,19 @@ namespace Ajupov.Utils.All.Http.FormDataHttpClient
             Dictionary<string, string> headers = default,
             CancellationToken ct = default)
         {
-            using var client = _factory.CreateClient();
+            var response = await PostInternalAsync(uri, parameters, body, headers, ct);
 
-            AddHeaders(client, headers);
-            var response = await client.PostAsync(uri, ToFormUrlEncodedContent(body), ct);
+            return await response.ReadResponseContentAsync<TResult>(ct);
+        }
 
-            return await ReadResponseContentAsync<TResult>(response, ct);
+        public Task PutAsync(
+            string uri,
+            object parameters = default,
+            object body = default,
+            Dictionary<string, string> headers = default,
+            CancellationToken ct = default)
+        {
+            return PutInternalAsync(uri, parameters, body, headers, ct);
         }
 
         public async Task<TResult> PutAsync<TResult>(
@@ -54,12 +77,19 @@ namespace Ajupov.Utils.All.Http.FormDataHttpClient
             Dictionary<string, string> headers = default,
             CancellationToken ct = default)
         {
-            using var client = _factory.CreateClient();
+            var response = await PutInternalAsync(uri, parameters, body, headers, ct);
 
-            AddHeaders(client, headers);
-            var response = await client.PutAsync(uri, ToFormUrlEncodedContent(body), ct);
+            return await response.ReadResponseContentAsync<TResult>(ct);
+        }
 
-            return await ReadResponseContentAsync<TResult>(response, ct);
+        public Task PatchAsync(
+            string uri,
+            object parameters = default,
+            object body = default,
+            Dictionary<string, string> headers = default,
+            CancellationToken ct = default)
+        {
+            return PathInternalAsync(uri, parameters, body, headers, ct);
         }
 
         public async Task<TResult> PatchAsync<TResult>(
@@ -69,12 +99,18 @@ namespace Ajupov.Utils.All.Http.FormDataHttpClient
             Dictionary<string, string> headers = default,
             CancellationToken ct = default)
         {
-            using var client = _factory.CreateClient();
+            var response = await PathInternalAsync(uri, parameters, body, headers, ct);
 
-            AddHeaders(client, headers);
-            var response = await client.PatchAsync(uri, ToFormUrlEncodedContent(body), ct);
+            return await response.ReadResponseContentAsync<TResult>(ct);
+        }
 
-            return await ReadResponseContentAsync<TResult>(response, ct);
+        public Task DeleteAsync(
+            string uri,
+            object parameters = default,
+            Dictionary<string, string> headers = default,
+            CancellationToken ct = default)
+        {
+            return DeleteInternalAsync(uri, parameters, headers, ct);
         }
 
         public async Task<TResult> DeleteAsync<TResult>(
@@ -83,49 +119,97 @@ namespace Ajupov.Utils.All.Http.FormDataHttpClient
             Dictionary<string, string> headers = default,
             CancellationToken ct = default)
         {
+            var response = await DeleteInternalAsync(uri, parameters, headers, ct);
+
+            return await response.ReadResponseContentAsync<TResult>(ct);
+        }
+
+        private async Task<HttpResponseMessage> GetInternalAsync(
+            string uri,
+            object parameters = default,
+            Dictionary<string, string> headers = default,
+            CancellationToken ct = default)
+        {
             using var client = _factory.CreateClient();
 
-            AddHeaders(client, headers);
-            var response = await client.DeleteAsync(uri, ct);
+            var response = await client
+                .AddHeaders(headers)
+                .GetAsync(uri.AddParameters(parameters), ct);
 
-            return await ReadResponseContentAsync<TResult>(response, ct);
-        }
-
-        private static void AddHeaders(HttpClient client, Dictionary<string, string> headers)
-        {
-            foreach (var (key, value) in headers ?? new Dictionary<string, string>())
-            {
-                client.DefaultRequestHeaders.Add(key, value);
-            }
-        }
-
-        private static HttpContent ToFormUrlEncodedContent(object body)
-        {
-            return new FormUrlEncodedContent(
-                body?
-                    .GetType()
-                    .GetProperties()
-                    .Select(x =>
-                    {
-                        var jsonPropertyValue = x.CustomAttributes
-                            .FirstOrDefault(a => a.AttributeType == typeof(JsonPropertyNameAttribute))?
-                            .ConstructorArguments.FirstOrDefault().Value?.ToString();
-
-                        return new KeyValuePair<string, string>(
-                            !string.IsNullOrEmpty(jsonPropertyValue) ? jsonPropertyValue : x.Name,
-                            x.GetValue(body)?.ToString());
-                    })
-                ?? Array.Empty<KeyValuePair<string, string>>());
-        }
-
-        private static async Task<TResult> ReadResponseContentAsync<TResult>(
-            HttpResponseMessage response,
-            CancellationToken ct)
-        {
             response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync(ct);
 
-            return typeof(TResult) == typeof(void) ? default : JsonSerializer.Deserialize<TResult>(content);
+            return response;
+        }
+
+        private async Task<HttpResponseMessage> PostInternalAsync(
+            string uri,
+            object parameters = default,
+            object body = default,
+            Dictionary<string, string> headers = default,
+            CancellationToken ct = default)
+        {
+            using var client = _factory.CreateClient();
+
+            var response = await client
+                .AddHeaders(headers)
+                .PostAsync(uri.AddParameters(parameters), body.ToFormUrlEncodedContent(), ct);
+
+            response.EnsureSuccessStatusCode();
+
+            return response;
+        }
+
+        private async Task<HttpResponseMessage> PutInternalAsync(
+            string uri,
+            object parameters = default,
+            object body = default,
+            Dictionary<string, string> headers = default,
+            CancellationToken ct = default)
+        {
+            using var client = _factory.CreateClient();
+
+            var response = await client
+                .AddHeaders(headers)
+                .PutAsync(uri.AddParameters(parameters), body.ToFormUrlEncodedContent(), ct);
+
+            response.EnsureSuccessStatusCode();
+
+            return response;
+        }
+
+        private async Task<HttpResponseMessage> PathInternalAsync(
+            string uri,
+            object parameters = default,
+            object body = default,
+            Dictionary<string, string> headers = default,
+            CancellationToken ct = default)
+        {
+            using var client = _factory.CreateClient();
+
+            var response = await client
+                .AddHeaders(headers)
+                .PatchAsync(uri.AddParameters(parameters), body.ToFormUrlEncodedContent(), ct);
+
+            response.EnsureSuccessStatusCode();
+
+            return response;
+        }
+
+        private async Task<HttpResponseMessage> DeleteInternalAsync(
+            string uri,
+            object parameters = default,
+            Dictionary<string, string> headers = default,
+            CancellationToken ct = default)
+        {
+            using var client = _factory.CreateClient();
+
+            var response = await client
+                .AddHeaders(headers)
+                .DeleteAsync(uri.AddParameters(parameters), ct);
+
+            response.EnsureSuccessStatusCode();
+
+            return response;
         }
     }
 }
