@@ -23,7 +23,7 @@ namespace Ajupov.Utils.All.Http.JsonHttpClient
             return GetInternalAsync(uri, parameters, headers, ct);
         }
 
-        public async Task<TResult> GetAsync<TResult>(
+        public async Task<T> GetAsync<T>(
             string uri,
             object parameters = default,
             Dictionary<string, string> headers = default,
@@ -31,7 +31,7 @@ namespace Ajupov.Utils.All.Http.JsonHttpClient
         {
             var response = await GetInternalAsync(uri, parameters, headers, ct);
 
-            return await response.ReadResponseContentAsync<TResult>(ct);
+            return await response.ReadResponseContentAsync<T>(ct);
         }
 
         public Task PostAsync(
@@ -44,7 +44,7 @@ namespace Ajupov.Utils.All.Http.JsonHttpClient
             return PostInternalAsync(uri, parameters, body, headers, ct);
         }
 
-        public async Task<TResult> PostAsync<TResult>(
+        public async Task<T> PostAsync<T>(
             string uri,
             object parameters = default,
             object body = default,
@@ -53,7 +53,7 @@ namespace Ajupov.Utils.All.Http.JsonHttpClient
         {
             var response = await PostInternalAsync(uri, parameters, body, headers, ct);
 
-            return await response.ReadResponseContentAsync<TResult>(ct);
+            return await response.ReadResponseContentAsync<T>(ct);
         }
 
         public Task PutAsync(
@@ -66,7 +66,7 @@ namespace Ajupov.Utils.All.Http.JsonHttpClient
             return PutInternalAsync(uri, parameters, body, headers, ct);
         }
 
-        public async Task<TResult> PutAsync<TResult>(
+        public async Task<T> PutAsync<T>(
             string uri,
             object parameters = default,
             object body = default,
@@ -75,7 +75,7 @@ namespace Ajupov.Utils.All.Http.JsonHttpClient
         {
             var response = await PutInternalAsync(uri, parameters, body, headers, ct);
 
-            return await response.ReadResponseContentAsync<TResult>(ct);
+            return await response.ReadResponseContentAsync<T>(ct);
         }
 
         public Task PatchAsync(
@@ -88,7 +88,7 @@ namespace Ajupov.Utils.All.Http.JsonHttpClient
             return PathInternalAsync(uri, parameters, body, headers, ct);
         }
 
-        public async Task<TResult> PatchAsync<TResult>(
+        public async Task<T> PatchAsync<T>(
             string uri,
             object parameters = default,
             object body = default,
@@ -97,7 +97,7 @@ namespace Ajupov.Utils.All.Http.JsonHttpClient
         {
             var response = await PathInternalAsync(uri, parameters, body, headers, ct);
 
-            return await response.ReadResponseContentAsync<TResult>(ct);
+            return await response.ReadResponseContentAsync<T>(ct);
         }
 
         public Task DeleteAsync(
@@ -109,7 +109,7 @@ namespace Ajupov.Utils.All.Http.JsonHttpClient
             return DeleteInternalAsync(uri, parameters, headers, ct);
         }
 
-        public async Task<TResult> DeleteAsync<TResult>(
+        public async Task<T> DeleteAsync<T>(
             string uri,
             object parameters = default,
             Dictionary<string, string> headers = default,
@@ -117,7 +117,7 @@ namespace Ajupov.Utils.All.Http.JsonHttpClient
         {
             var response = await DeleteInternalAsync(uri, parameters, headers, ct);
 
-            return await response.ReadResponseContentAsync<TResult>(ct);
+            return await response.ReadResponseContentAsync<T>(ct);
         }
 
         private async Task<HttpResponseMessage> GetInternalAsync(
