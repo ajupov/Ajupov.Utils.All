@@ -40,7 +40,7 @@ namespace Ajupov.Utils.All.Http
                 }
             }
 
-            return result.Any() ? $"?{string.Join("&", result)}" : string.Empty;
+            return uri + (result.Any() ? $"?{string.Join("&", result)}" : string.Empty);
         }
 
         public static string AddParameters(this string uri, params (string key, object value)[] parameters)
