@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-        <PackageVersion>1.9.5</PackageVersion>
+        <PackageVersion>1.9.6</PackageVersion>
         <Authors>U. Ajupov</Authors>
         <RepositoryUrl>https://github.com/ajupov/Ajupov.Utils.All.git</RepositoryUrl>
         <RepositoryType>git</RepositoryType>

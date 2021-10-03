@@ -15,6 +15,8 @@ namespace Ajupov.Utils.All.Http
 {
     public static class HttpExtensions
     {
+        private static readonly JsonSerializerOptions JsonSerializerOptions = new (JsonSerializerDefaults.Web);
+
         public static string AddParameters(this string uri, object parameters)
         {
             var properties = TypeDescriptor.GetProperties(parameters);
@@ -99,7 +101,7 @@ namespace Ajupov.Utils.All.Http
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync(ct);
 
-            return JsonSerializer.Deserialize<TResult>(content);
+            return JsonSerializer.Deserialize<TResult>(content, JsonSerializerOptions);
         }
     }
 }
