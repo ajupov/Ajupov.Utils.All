@@ -70,7 +70,7 @@ namespace Ajupov.Utils.All.Http
 
         public static HttpContent ToStringContent(this object body)
         {
-            return new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json; charset=UTF-8");
+            return new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
         }
 
         public static HttpContent ToFormUrlEncodedContent(this object body)
