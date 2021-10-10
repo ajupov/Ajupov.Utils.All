@@ -5,18 +5,16 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using Ajupov.Utils.All.Json;
 
 namespace Ajupov.Utils.All.Http
 {
     public static class HttpExtensions
     {
-        private static readonly JsonSerializerOptions JsonSerializerOptions = new (JsonSerializerDefaults.Web);
-
         public static string AddParameters(this string uri, object parameters)
         {
             var properties = TypeDescriptor.GetProperties(parameters);
@@ -72,7 +70,7 @@ namespace Ajupov.Utils.All.Http
 
         public static HttpContent ToStringContent(this object body)
         {
-            return new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
+            return new StringContent(body.ToJsonString(), Encoding.UTF8, "application/json");
         }
 
         public static HttpContent ToFormUrlEncodedContent(this object body)
@@ -101,7 +99,7 @@ namespace Ajupov.Utils.All.Http
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync(ct);
 
-            return JsonSerializer.Deserialize<TResult>(content, JsonSerializerOptions);
+            return content.FromJsonString<TResult>();
         }
     }
 }
